@@ -42,6 +42,8 @@
       gnomeExtensions.pop-shell
       
       devenv.packages.x86_64-linux.devenv
+      
+      wine
     ];
   };
   
