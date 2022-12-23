@@ -95,6 +95,12 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    settings.auto-optimise-store = true;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
