@@ -79,6 +79,8 @@
   services.udev.packages = with pkgs; [
     vial
   ];
+  
+  services.deluge.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
@@ -130,6 +132,7 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+  programs.steam.enable = true;
 
   # List services that you want to enable:
 

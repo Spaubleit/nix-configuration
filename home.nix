@@ -21,7 +21,7 @@
       libreoffice
       spotify
       protonvpn-gui
-      transmission-gtk
+      qbittorrent
       
       # Messengers
       tdesktop
@@ -43,7 +43,7 @@
       
       devenv.packages.x86_64-linux.devenv
       
-      wine
+      wine      
     ];
   };
   
@@ -63,5 +63,6 @@
       settings = {};
     };
     home-manager.enable = true;
+    #steam.enable = true;
   };
 }
