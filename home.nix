@@ -11,6 +11,9 @@
       nodejs
       yarn
       git
+      unrar
+      python3Full
+      usbutils
     
       # Apps
       firefox
@@ -22,10 +25,15 @@
       spotify
       protonvpn-gui
       qbittorrent
+      freecad
+      prusa-slicer
+      cura
+      printrun
+      mpv
       
       # Messengers
       tdesktop
-      teams
+      pkgs-unstable.teams
       slack
       zoom-us
       skypeforlinux
@@ -64,5 +72,12 @@
     };
     home-manager.enable = true;
     #steam.enable = true;
+    vscode = {
+      enable = true;
+      package = pkgs.vscode.fhs;
+      extensions = with pkgs.vscode-extensions; [
+      ];
+    };
   };
+ 
 }
