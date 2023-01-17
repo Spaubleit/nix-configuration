@@ -37,8 +37,8 @@ let
       bed_mesh = {
         speed = 100;
         horizontal_move_z = 5;
-        mesh_min = "28, 28";
-        mesh_max = "205, 205";
+        mesh_min = "28, 23";
+        mesh_max = "205, 200";
         probe_count = "5, 5";
         fade_start = 1;
         fade_end = 10;
@@ -472,8 +472,9 @@ let
         enable_pin = "!PC3";
         rotation_distance = 40;
         endstop_pin = "tmc2209_stepper_y:virtual_endstop";
-        position_endstop = 0;
-        position_max = 225;
+        position_endstop = -5;
+        position_min = -5;
+        position_max = 220;
         homing_speed = 30;
         homing_retract_dist = 0;
       };
