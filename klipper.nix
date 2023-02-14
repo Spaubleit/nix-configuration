@@ -394,19 +394,19 @@ let
     performance = lib.recursiveUpdate _ {
       "tmc2209 stepper_x" = {
         run_current = 1.000;
-        stealthchop_threshold = 0;
+        stealthchop_threshold = 1;
         interpolate = false;
-        driver_SGTHRS = 81;
+        driver_SGTHRS = 70;
       };
       "tmc2209 stepper_y" = {
         run_current = 1.000;
-        stealthchop_threshold = 0;
+        stealthchop_threshold = 1;
         interpolate = false;
-        driver_SGTHRS = 81;
+        driver_SGTHRS = 65;
       };
       "tmc2209 stepper_z" = {
         run_current = 1.000;
-        stealthchop_threshold = 0;
+        stealthchop_threshold = 1;
         interpolate = false;
       };
       "tmc2209 extruder" = {
@@ -505,7 +505,7 @@ let
         microsteps = 64;
       };
     };
-    performance = {
+    performance = lib.recursiveUpdate _ {
       stepper_x = {
         microsteps = 32;
       };
@@ -516,7 +516,7 @@ let
         microsteps = 32;
       };
     };
-    stealth = {
+    stealth = lib.recursiveUpdate _ {
       stepper_x = {
         microsteps = 16;
       };
@@ -636,7 +636,7 @@ in {
       # };
     # };
     settings = merge [
-      profiles.basic
+      profiles.performance
       {
         mcu = {
           serial = serial;

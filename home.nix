@@ -17,7 +17,7 @@
     
       # Apps
       firefox
-      google-chrome
+      pkgs-unstable.google-chrome
       pkgs-unstable.jetbrains.webstorm
       mozillavpn
       obsidian
@@ -30,6 +30,7 @@
       cura
       printrun
       mpv
+      blender
       
       # Messengers
       tdesktop
