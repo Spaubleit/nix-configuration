@@ -1,9 +1,13 @@
-{ config, pkgs, pkgs-unstable, devenv, system, ... }:
+{ config, pkgs, pkgs-unstable, pkgs-jetbrains-old, devenv, system, ... }:
 {
   home = {
     username = "spaubleit";
     homeDirectory = "/home/spaubleit";
     stateVersion = "22.05";
+
+    # sessionVariables = {
+    #   NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
+    # };
     
     packages = with pkgs; [
       # Utils
@@ -14,11 +18,15 @@
       unrar
       python3Full
       usbutils
+      steam-run
+      ventoy-bin
     
       # Apps
       firefox
       pkgs-unstable.google-chrome
-      pkgs-unstable.jetbrains.webstorm
+      pkgs-jetbrains-old.jetbrains.webstorm
+      # pkgs-unstable.jetbrains.gateway
+      pkgs-unstable.jetbrains-toolbox
       mozillavpn
       obsidian
       libreoffice
@@ -31,10 +39,14 @@
       printrun
       mpv
       blender
+      psst
+      discord
+      lutris
+      gnome.gnome-boxes
       
       # Messengers
       tdesktop
-      pkgs-unstable.teams
+      teams
       slack
       zoom-us
       skypeforlinux
@@ -80,5 +92,4 @@
       ];
     };
   };
- 
 }
