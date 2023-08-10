@@ -1,9 +1,24 @@
-{ config, pkgs, pkgs-unstable, pkgs-jetbrains-old, devenv, system, ... }:
+{ config, pkgs, pkgs-stable, pkgs-jetbrains-old, devenv, system, ... }:
 {
+  wayland.windowManager.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    settings = {
+      input = {
+        kb_layout = "us";
+        kb_variant = "dvorak";
+      };
+      bind = [
+        "SUPER,t,exec,kitty"
+        "SUPER,Return,exec,wofi -S run"
+      ];
+    };
+  };
+
   home = {
     username = "spaubleit";
     homeDirectory = "/home/spaubleit";
-    stateVersion = "22.05";
+    stateVersion = "23.05";
 
     # sessionVariables = {
     #   NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
@@ -23,10 +38,10 @@
     
       # Apps
       firefox
-      pkgs-unstable.google-chrome
+      google-chrome
       pkgs-jetbrains-old.jetbrains.webstorm
       # pkgs-unstable.jetbrains.gateway
-      pkgs-unstable.jetbrains-toolbox
+      jetbrains-toolbox
       mozillavpn
       obsidian
       libreoffice
@@ -43,6 +58,8 @@
       discord
       lutris
       gnome.gnome-boxes
+      dbeaver
+      kitty
       
       # Messengers
       tdesktop
@@ -64,7 +81,7 @@
       
       devenv.packages.x86_64-linux.devenv
       
-      wine      
+      wineWowPackages.stable     
     ];
   };
   
@@ -77,6 +94,18 @@
     direnv = {
       enable = true;
       enableBashIntegration = true;
+    };
+    wofi.enable = true;
+    waybar = {
+      enable = true;
+      systemd.enable = true;
+      settings = {
+        mode = "dock";
+        potition = "top";
+        layer = "top";
+        height = 40;
+        margin = 6;
+      };
     };
     starship = {
       enable = true;

@@ -636,7 +636,7 @@ in {
       # };
     # };
     settings = merge [
-      profiles.performance
+      profiles.basic
       {
         mcu = {
           serial = serial;
@@ -646,7 +646,7 @@ in {
           kinematics = "cartesian";
         };
         extruder = {
-          nozzle_diameter = 0.400;
+          nozzle_diameter = 0.100;
           rotation_distance = 4.63;
           control = "pid";
           pid_kp = 22.468;

@@ -14,6 +14,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.supportedFilesystems = [ "ntfs" ];
+  boot.readOnlyNixStore = false;
 
   networking.hostName = "desktop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -47,7 +48,10 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };
   services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
@@ -97,12 +101,11 @@
 
   # enable flakes
   nix = {
-    readOnlyStore = false;
     package = pkgs.nixFlakes;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-    settings.auto-optimise-store = true;
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+    };
     gc = {
       automatic = true;
       dates = "weekly";
@@ -141,6 +144,12 @@
     steam.enable = true;
     hamster.enable = true;
     nix-ld.enable = true;
+    hyprland = {
+      enable = true;
+      xwayland = {
+        enable = true;
+      };
+    };
   };
 
   # List services that you want to enable:
@@ -148,9 +157,13 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
-  # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 8384 2200 ];
-  networking.firewall.allowedUDPPorts = [ 2200 21027 ];
+  networking = {
+    firewall = {
+      allowedTCPPorts = [ 8384 2200 ];
+      allowedUDPPorts = [ 2200 21027 ];
+    };
+  };
+  
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 

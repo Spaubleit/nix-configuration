@@ -1,21 +1,23 @@
 {
   description = "NixOS configuration";
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
     nixpkgs-jetbrains-old.url = "github:nixos/nixpkgs/d1c3fea7ecbed758168787fe4e4a3157e52bc808";
     devenv.url = "github:cachix/devenv/v0.6.2";
-    home-manager.url = "github:nix-community/home-manager/release-22.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs@{ nixpkgs, nixpkgs-unstable, nixpkgs-jetbrains-old, home-manager, devenv, ... }: 
+  outputs = inputs@{ nixpkgs, nixpkgs-stable, nixpkgs-jetbrains-old, home-manager, devenv, ... }: 
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       };
-      pkgs-unstable = import nixpkgs-unstable {
+      pkgs-stable = import nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
       };
@@ -27,6 +29,7 @@
       nixosConfigurations = {
         desktop = nixpkgs.lib.nixosSystem {
           inherit system;
+          specialArgs = { inherit inputs; };
           modules = [
             ./configuration.nix
             ./klipper.nix
@@ -35,7 +38,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.spaubleit = import ./home.nix { 
                 config = {};
-                inherit pkgs pkgs-unstable pkgs-jetbrains-old system devenv; 
+                inherit pkgs pkgs-stable pkgs-jetbrains-old system devenv; 
               };
             }
           ];
