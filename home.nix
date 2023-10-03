@@ -6,12 +6,28 @@
     settings = {
       input = {
         kb_layout = "us";
-        kb_variant = "dvorak";
+        kb_variant = "dvp";
       };
       bind = [
         "SUPER,t,exec,kitty"
         "SUPER,Return,exec,wofi -S run"
       ];
+      monitor = [
+        "DP-1,     2560x1440, 2560x0, 1"
+        "HDMI-A-1, 2560x1440, 0x0,    1"
+        # ",         preferred, auto,   1"
+      ];
+      # workspace = [
+      #   "1,rounding:false"
+      #   "2,rounding:false"
+      # ];
+    };
+  };
+
+  dconf.settings = {
+    "org/virt-manager/virt-manager/connections" = {
+      autoconnect = ["qemu:///system"];
+      uris = ["qemu:///system"];
     };
   };
 
@@ -27,7 +43,6 @@
     packages = with pkgs; [
       # Utils
       cloc
-      nodejs
       yarn
       git
       unrar
@@ -35,6 +50,9 @@
       usbutils
       steam-run
       ventoy-bin
+      podman-compose
+      devbox
+      nix-direnv
     
       # Apps
       firefox
@@ -60,6 +78,7 @@
       gnome.gnome-boxes
       dbeaver
       kitty
+      authenticator
       
       # Messengers
       tdesktop
@@ -78,6 +97,7 @@
       gnomeExtensions.gtk-title-bar
       gnomeExtensions.tray-icons-reloaded
       gnomeExtensions.pop-shell
+      gnomeExtensions.smart-auto-move
       
       devenv.packages.x86_64-linux.devenv
       
@@ -100,11 +120,16 @@
       enable = true;
       systemd.enable = true;
       settings = {
-        mode = "dock";
-        potition = "top";
-        layer = "top";
-        height = 40;
-        margin = 6;
+        primary = {
+          mode = "dock";
+          potition = "top";
+          layer = "top";
+          height = 40;
+          margin = "6";
+
+          modules-left = ["hyprland/workspaces"];
+          modules-center = ["clock"];
+        };
       };
     };
     starship = {

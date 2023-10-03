@@ -16,7 +16,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
   boot.readOnlyNixStore = false;
 
-  networking.hostName = "desktop"; # Define your hostname.
+  networking.hostName = "desktop"; # Define your hostname
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -93,10 +93,20 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  virtualisation.libvirtd.enable = true;
+  programs.dconf.enable = true;
+
+  virtualisation.virtualbox = {
+    host.enable = true;
+    host.enableExtensionPack = true;
+  };
+  users.extraGroups.vboxusers.members = [ "spaubleit" ];
+  
   virtualisation.podman = {
     enable = true;
     dockerCompat = true;
     dockerSocket.enable = true;
+    defaultNetwork.settings.dns_enabled = true;
   };
 
   # enable flakes
@@ -117,7 +127,7 @@
   users.users.spaubleit = {
     isNormalUser = true;
     description = "spaubleit";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "podman" ];
     packages = with pkgs; [
       vial
     ];
@@ -131,6 +141,7 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
+    virt-manager
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

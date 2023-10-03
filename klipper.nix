@@ -597,6 +597,7 @@ in {
   services.moonraker = {
     enable = true;
     user = "root";
+    address = "0.0.0.0";
     settings = {
       octoprint_compat = { };
       history = { };
@@ -606,7 +607,7 @@ in {
           "*.local"
           "*.lan"
           "*://app.fluidd.xyz"
-          "*://my.mainsail.xyz"
+          "https://my.mainsail.xyz"
         ];
         trusted_clients = [
           "10.0.0.0/8"
