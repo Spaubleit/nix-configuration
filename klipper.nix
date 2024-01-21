@@ -56,7 +56,6 @@ let
         M117 Bed mesh...
         BED_MESH_CALIBRATE
         G0 X1 Y115 Z50 F10000
-        BED_MESH_PROFILE save=SV06_mesh
         SAVE_CONFIG
       ";
     };
@@ -182,48 +181,18 @@ let
         PROBE_CALIBRATE
       ";
       "pause_resume" = {};
-      "gcode_macro PAUSE" = {
-        rename_existing = "PAUSE_BASE";
-        description = "Pause the actual running print";
-        gcode = "
-          PAUSE_BASE
-          _TOOLHEAD_PARK_PAUSE_CANCEL
-        ";
-      };
-      "gcode_macro RESUME" = {
-        description = "Resume the actual running print";
-        rename_existing = "RESUME_BASE";
-        gcode = "
-          ##### read extrude from  _TOOLHEAD_PARK_PAUSE_CANCEL  macro #####
-          {% set extrude = printer['gcode_macro _TOOLHEAD_PARK_PAUSE_CANCEL'].extrude %}
-          #### get VELOCITY parameter if specified ####
-          {% if 'VELOCITY' in params|upper %}
-            {% set get_params = ('VELOCITY=' + params.VELOCITY)  %}
-          {%else %}
-            {% set get_params = \"\" %}
-          {% endif %}
-          ##### end of definitions #####
-          {% if printer.extruder.can_extrude|lower == 'true' %}
-            M83
-            G1 E{extrude} F2100
-            {% if printer.gcode_move.absolute_extrude |lower == 'true' %} M82 {% endif %}
-          {% else %}
-            {action_respond_info(\"Extruder not hot enough\")}
-          {% endif %}  
-          RESUME_BASE {get_params}
-        ";
-      };
       "gcode_macro CANCEL_PRINT" = {
         description = "Cancel the actual running print";
         rename_existing = "CANCEL_PRINT_BASE";
         variable_park = "True";
         gcode = "
-          M117 Heating bed & nozzle...
-          M104 S{150}
-          M190 S{params.BED_TEMP|default(60, true)}
-          G28
-          TEMPERATURE_WAIT SENSOR=heater_bed MINIMUM={params.BED_TEMP|default(60, true)}
-          PROBE_CALIBRATE
+          {% if printer.pause_resume.is_paused|lower == 'false' and park|lower == 'true'%}
+            _TOOLHEAD_PARK_PAUSE_CANCEL
+          {% endif %}
+          TURN_OFF_HEATERS
+          M106 S0
+          CANCEL_PRINT_BASE
+          M84
         ";
       };    
     };
@@ -271,14 +240,13 @@ let
         M190 S{BED}
         BED_MESH_PROFILE LOAD=SV06_mesh
         G28 Z
-        G90
-        M83
-        G1 X1 Y65 F5000
-        G1 Z0.3 F2000 
-        G92 E0 
-        G1 Y125 E10 F1000 
-        G1 Y135 F15000 
-        G1 Z5 F2000
+        G90 ; use absolute coordinates
+        M83 ; extruder relative mode
+        G1 Z0.2 F720
+        G1 Y-3 F1000 ; go outside print area
+        G92 E0
+        G1 X60 E6 F1000 ; intro line
+        G1 X100 E6 F1000 ; intro line
       ";
       "gcode_macro END_PRINT".gcode = "
         M400                           
@@ -307,10 +275,10 @@ let
         G0 Z{z_safe} F3600            
         G0 X{x_safe} Y{y_safe} F20000 
         TURN_OFF_HEATERS
-        M107                         
-        G90                         
+        M107 ; turn off fan
+        G90 ; use absolute coordinates
         G0 X5 Y{max_y} F3600       
-        M84    
+        M84 ; disable motors
       ";
     };
     raspberry = {
@@ -604,10 +572,9 @@ in {
       authorization = {
         force_logins = true;
         cors_domains = [
-          "*.local"
-          "*.lan"
+          "*://*local"
           "*://app.fluidd.xyz"
-          "https://my.mainsail.xyz"
+          "*://my.mainsail.xyz"
         ];
         trusted_clients = [
           "10.0.0.0/8"
@@ -628,7 +595,7 @@ in {
     enable = true;
     user = "spaubleit";
     group = "users";
-    mutableConfig = true;
+    # mutableConfig = true;
     # firmwares = {
       # mcu = {
       #   enable = true;
@@ -647,7 +614,7 @@ in {
           kinematics = "cartesian";
         };
         extruder = {
-          nozzle_diameter = 0.100;
+          nozzle_diameter = 0.400;
           rotation_distance = 4.63;
           control = "pid";
           pid_kp = 22.468;
@@ -655,7 +622,7 @@ in {
           pid_kd = 71.615;
         };
         probe = {
-          z_offset = 0;
+          # z_offset = 0;
           pin = "PB1";
           x_offset = 27.5;
           y_offset = -20;
@@ -687,6 +654,27 @@ in {
         virtual_sdcard.path = "/home/spaubleit/Printing/gcodes";
         # include mainsail cfg
         "menu __main __octoprint".type = "disabled";
+        "bed_mesh SV06_mesh" = {
+          version = 1;
+          points = "
+              -0.536875, -0.298906, -0.119219, -0.057500, -0.091563
+              -0.392969, -0.204219, -0.056250, 0.014219, -0.009219
+              -0.336406, -0.168750, -0.052969, 0.023437, -0.016563
+              -0.282969, -0.119375, -0.000469, 0.039844, -0.027500
+              -0.284063, -0.098594, 0.025625, 0.031562, -0.087656
+          ";
+          x_count = 5;
+          y_count = 5;
+          mesh_x_pps = 2;
+          mesh_y_pps = 2;
+          algo = "bicubic";
+          tension = 0.05;
+          min_x = 28.0;
+          max_x = 205.0;
+          min_y = 23.0;
+          max_y = 200.0;
+        };
+        probe.z_offset = 1.650;
       }
       functions.display
       functions.raspberry

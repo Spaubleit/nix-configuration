@@ -49,10 +49,11 @@
       python3Full
       usbutils
       steam-run
-      ventoy-bin
+      ventoy-full
       podman-compose
       devbox
       nix-direnv
+      i2p
     
       # Apps
       firefox
@@ -68,7 +69,6 @@
       qbittorrent
       freecad
       prusa-slicer
-      cura
       printrun
       mpv
       blender
@@ -79,13 +79,14 @@
       dbeaver
       kitty
       authenticator
+      megasync
       
       # Messengers
       tdesktop
-      teams
       slack
       zoom-us
       skypeforlinux
+      wire-desktop
       
       # Graphics
       krita
