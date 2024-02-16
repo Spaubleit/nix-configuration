@@ -45,19 +45,17 @@
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm = {
-    enable = true;
-    wayland = true;
-  };
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "dvp";
+    enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;
+    };
+    desktopManager.gnome.enable = true;
+    xkb = { 
+      layout = "us";
+      variant = "dvp";
+    };
   };
 
   # Enable CUPS to print documents.
@@ -69,6 +67,7 @@
   security.rtkit.enable = true;
   
   services = {
+    flatpak.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;

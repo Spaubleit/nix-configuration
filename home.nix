@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-stable, pkgs-jetbrains-old, devenv, system, ... }:
+{ config, pkgs, pkgs-stable, devenv, system, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -58,7 +58,6 @@
       # Apps
       firefox
       google-chrome
-      pkgs-jetbrains-old.jetbrains.webstorm
       # pkgs-unstable.jetbrains.gateway
       jetbrains-toolbox
       mozillavpn
@@ -68,6 +67,8 @@
       protonvpn-gui
       qbittorrent
       freecad
+      gmsh # for freecad
+      calculix # for freecad
       prusa-slicer
       printrun
       mpv
@@ -80,6 +81,9 @@
       kitty
       authenticator
       megasync
+      minigalaxy
+      # bottles
+      # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
       
       # Messengers
       tdesktop
@@ -101,8 +105,10 @@
       gnomeExtensions.smart-auto-move
       
       devenv.packages.x86_64-linux.devenv
-      
       wineWowPackages.stable     
+
+      # libs
+      libunwind # for steam in bottles
     ];
   };
   
@@ -139,7 +145,7 @@
       settings = {};
     };
     home-manager.enable = true;
-    #steam.enable = true;
+    # steam.enable = true;
     vscode = {
       enable = true;
       package = pkgs.vscode.fhs;
