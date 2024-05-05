@@ -60,6 +60,8 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  hardware.sane.enable = true;
+  hardware.sane.extraBackends = [ pkgs.hplipWithPlugin ];
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -126,7 +128,7 @@
   users.users.spaubleit = {
     isNormalUser = true;
     description = "spaubleit";
-    extraGroups = [ "networkmanager" "wheel" "podman" ];
+    extraGroups = [ "networkmanager" "wheel" "podman" "scanner" "lp" ];
     packages = with pkgs; [
       vial
     ];

@@ -82,6 +82,7 @@
       authenticator
       megasync
       minigalaxy
+      slack
       # bottles
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
       
@@ -98,8 +99,7 @@
       
       # gnome
       gnome.gnome-tweaks
-      gnomeExtensions.syncthing-icon
-      gnomeExtensions.gtk-title-bar
+      gnomeExtensions.syncthing-indicator
       gnomeExtensions.tray-icons-reloaded
       gnomeExtensions.pop-shell
       gnomeExtensions.smart-auto-move

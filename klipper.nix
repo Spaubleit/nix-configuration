@@ -251,7 +251,7 @@ let
       "gcode_macro END_PRINT".gcode = "
         M400                           
         G92 E0                         
-        G1 E-4.0 F3600               
+        G1 E-6.0 F3600               
         G91                           
         {% set max_x = printer.configfile.config[\"stepper_x\"][\"position_max\"]|float %}
         {% set max_y = printer.configfile.config[\"stepper_y\"][\"position_max\"]|float %}
@@ -614,7 +614,7 @@ in {
           kinematics = "cartesian";
         };
         extruder = {
-          nozzle_diameter = 0.400;
+          nozzle_diameter = 0.600;
           rotation_distance = 4.63;
           control = "pid";
           pid_kp = 22.468;
@@ -658,11 +658,11 @@ in {
           version = 1;
           # increase bring distance down
           points = "
-              -0.309375, -0.180313, -0.080313, -0.067344, -0.129063
-              -0.245625, -0.133125, -0.038594, -0.007813, -0.053594
-              -0.232656, -0.126094, -0.051406, 0.001094, -0.046563
-              -0.191563, -0.085469, 0.000156, 0.022812, -0.027969
-              -0.156406, -0.029219, 0.050781, 0.053594, -0.032969
+            -0.288281, -0.168594, -0.091875, -0.116250, -0.238438
+            -0.213281, -0.114219, -0.044531, -0.061875, -0.163594
+            -0.203438, -0.105469, -0.054844, -0.055625, -0.163125
+            -0.183906, -0.091875, -0.021719, -0.034844, -0.136250
+            -0.178906, -0.058750, 0.023125, 0.004375, -0.108125
           ";
           x_count = 5;
           y_count = 5;
@@ -675,7 +675,7 @@ in {
           min_y = 23.0;
           max_y = 200.0;
         };
-        probe.z_offset = 0.395; # increase bring distance down
+        probe.z_offset = 0.835; # increase bring distance down
       }
       functions.display
       functions.raspberry
