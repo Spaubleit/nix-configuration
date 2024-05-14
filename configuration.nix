@@ -67,6 +67,8 @@
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
+
+  security.pam.services.hyprlock = {};
   
   services = {
     flatpak.enable = true;
@@ -119,8 +121,8 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
+      dates = "monthly";
+      options = "--delete-older-than 1m";
     };
   };
 

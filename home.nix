@@ -5,16 +5,30 @@
     xwayland.enable = true;
     settings = {
       input = {
-        kb_layout = "us";
-        kb_variant = "dvp";
+        kb_layout = "us,ru";
+        kb_variant = "dvp,typewriter";
+        kb_options = "grp:caps_toggle";
+        numlock_by_default = true;
       };
       bind = [
-        "SUPER,t,exec,kitty"
         "SUPER,Return,exec,wofi -S run"
+        "SUPER,q,killactive"
+        "SUPER,t,exec,kitty"
+        "SUPER,l,exec,hyprlock"
+        # focus
+        "SUPER,up,movefocus,u"
+        "SUPER,down,movefocus,d"
+        "SUPER,left,movefocus,l"
+        "SUPER,right,movefocus,r"
+        # movement
+        "SUPER_CTRL,up,movewindow,u"
+        "SUPER_CTRL,down,movewindow,d"
+        "SUPER_CTRL,left,movewindow,l"
+        "SUPER_CTRL,right,movewindow,r"
       ];
       monitor = [
-        "DP-1,     2560x1440, 2560x0, 1"
-        "HDMI-A-1, 2560x1440, 0x0,    1"
+        "DP-1,     2560x1440, 1440x560, 1"
+        "HDMI-A-1, 2560x1440, 0x0,    1, transform, 1"
         # ",         preferred, auto,   1"
       ];
       # workspace = [
@@ -136,6 +150,17 @@
 
           modules-left = ["hyprland/workspaces"];
           modules-center = ["clock"];
+        };
+      };
+    };
+    hyprlock = {
+      enable = true;
+      settings = {
+        background = {
+          color = "rgba(25, 20, 20, 0.5)";
+        };
+        input-field = {
+          size = "200,50";
         };
       };
     };
