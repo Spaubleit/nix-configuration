@@ -93,23 +93,24 @@
     vial
   ];
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  virtualisation.libvirtd.enable = true;
   programs.dconf.enable = true;
 
-  virtualisation.virtualbox = {
-    host.enable = true;
-    host.enableExtensionPack = true;
-  };
-  users.extraGroups.vboxusers.members = [ "spaubleit" ];
-  
-  virtualisation.podman = {
-    enable = true;
-    dockerCompat = true;
-    dockerSocket.enable = true;
-    defaultNetwork.settings.dns_enabled = true;
+  virtualisation = {
+    libvirtd.enable = true;
+    virtualbox = {
+      host.enable = true;
+      host.enableExtensionPack = true;
+    };
+    containers.registries.search = [ "docker.io" ];
+    docker = {
+      enable = true;
+    };
+    podman = {
+      enable = true;
+      # dockerCompat = true;
+      # dockerSocket.enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+    };
   };
 
   # enable flakes
@@ -127,13 +128,24 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.spaubleit = {
-    isNormalUser = true;
-    description = "spaubleit";
-    extraGroups = [ "networkmanager" "wheel" "podman" "scanner" "lp" ];
-    packages = with pkgs; [
-      vial
-    ];
+  users = {
+    extraGroups.vboxusers.members = [ "spaubleit" ];
+    users.spaubleit = {
+      isNormalUser = true;
+      description = "spaubleit";
+      extraGroups = [ "networkmanager" "wheel" "podman" "docker" "scanner" "lp" ];
+      subUidRanges = [ {
+        count = 165536;
+        startUid = 10000;
+      } ];
+      subGidRanges = [ {
+        count = 165536;
+        startGid = 10000;
+      } ];
+      packages = with pkgs; [
+        vial
+      ];
+    };
   };
 
   # Allow unfree packages

@@ -1,5 +1,9 @@
-{ config, pkgs, pkgs-stable, devenv, system, ... }:
+{ config, pkgs, pkgs-stable, pkgs-webstorm, devenv, system, ags, ... }:
 {
+  imports = [
+    # ./desktop/default.nix
+    ags.homeManagerModules.default
+  ];
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -25,16 +29,39 @@
         "SUPER_CTRL,down,movewindow,d"
         "SUPER_CTRL,left,movewindow,l"
         "SUPER_CTRL,right,movewindow,r"
+        # monitor switch
+        "SUPER, Home, focusmonitor, -1"
+        "SUPER, End, focusmonitor, +1"
+        # workspace switch
+        "SUPER, Prior, workspace, m-1"
+        "SUPER, Next, workspace, m+1"
+        "SUPER, KP_End, workspace, 1"
+        "SUPER, KP_Down, workspace, 2"
+        "SUPER, KP_Next, workspace, 3"
+        "SUPER, KP_Left, workspace, 4"
+        "SUPER, KP_Begin, workspace, 5"
+        "SUPER, KP_Right, workspace, 6"
+        "SUPER, KP_Home, workspace, 7"
+        "SUPER, KP_Up, workspace, 8"
+        "SUPER, KP_Prior, workspace, 9"
+        # move to workspace
+        "SUPER, Prior, movetoworkspace, m-1"
+        "SUPER, Next, movetoworkspace, m+1"
+        "SUPER_CTRL, KP_End, movetoworkspace, 1"
+        "SUPER_CTRL, KP_Down, movetoworkspace, 2"
+        "SUPER_CTRL, KP_Next, movetoworkspace, 3"
+        "SUPER_CTRL, KP_Left, movetoworkspace, 4"
+        "SUPER_CTRL, KP_Begin, movetoworkspace, 5"
+        "SUPER_CTRL, KP_Right, movetoworkspace, 6"
+        "SUPER_CTRL, KP_Home, movetoworkspace, 7"
+        "SUPER_CTRL, KP_Up, movetoworkspace, 8"
+        "SUPER_CTRL, KP_Prior, movetoworkspace, 9"
       ];
       monitor = [
-        "DP-1,     2560x1440, 1440x560, 1"
+        "DP-1,     2560x1440, 1440x580, 1"
         "HDMI-A-1, 2560x1440, 0x0,    1, transform, 1"
         # ",         preferred, auto,   1"
       ];
-      # workspace = [
-      #   "1,rounding:false"
-      #   "2,rounding:false"
-      # ];
     };
   };
 
@@ -68,10 +95,12 @@
       devbox
       nix-direnv
       i2p
+      wireplumber
+      firefoxpwa
     
       # Apps
-      firefox
       google-chrome
+      tor-browser
       # pkgs-unstable.jetbrains.gateway
       jetbrains-toolbox
       mozillavpn
@@ -91,14 +120,16 @@
       discord
       lutris
       gnome.gnome-boxes
-      dbeaver
+      dbeaver-bin
       kitty
       authenticator
       megasync
       minigalaxy
-      slack
+      obs-studio
       # bottles
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
+      pkgs-webstorm.jetbrains.webstorm
+      proton-pass
       
       # Messengers
       tdesktop
@@ -106,6 +137,7 @@
       zoom-us
       skypeforlinux
       wire-desktop
+      mattermost-desktop
       
       # Graphics
       krita
@@ -124,13 +156,53 @@
       # libs
       libunwind # for steam in bottles
     ];
+
+    file = {
+      ".config/containers/policy.json".text = ''
+          {
+            "default": [{"type": "insecureAcceptAnything"}]
+          }
+      '';
+      ".config/containers/registries.conf".text = ''
+          unqualified-search-registries = [ "docker.io" ]
+        '';
+    };
   };
   
   services.syncthing = {
     enable = true;
   };
+
+  systemd.user = {
+    startServices = "sd-switch";
+    services.ags = {
+      Unit = {
+        Description = "Run ags";
+      };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+      Service = {
+        # todo refer home-manager environment package
+        ExecStart = "${pkgs.ags}/bin/ags";
+      };
+    };
+  };
   
   programs = {
+    firefox = {
+      enable = true;
+      nativeMessagingHosts = [ pkgs.firefoxpwa ];
+    };
+    ags = {
+      enable = true;
+      configDir = ./desktop/ags;
+      extraPackages = with pkgs; [
+        gtksourceview
+        webkitgtk
+        accountsservice
+      ];
+    };
     bash.enable = true;
     direnv = {
       enable = true;
@@ -138,7 +210,7 @@
     };
     wofi.enable = true;
     waybar = {
-      enable = true;
+      enable = false;
       systemd.enable = true;
       settings = {
         primary = {
@@ -150,6 +222,7 @@
 
           modules-left = ["hyprland/workspaces"];
           modules-center = ["clock"];
+          modules-right = ["hyprland/language"];
         };
       };
     };
@@ -173,8 +246,14 @@
     # steam.enable = true;
     vscode = {
       enable = true;
-      package = pkgs.vscode.fhs;
+      userSettings = {
+        "window.openFoldersInNewWindow" = "on";
+        "files.autoSave" = "onWindowChange";
+        "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
+      };
       extensions = with pkgs.vscode-extensions; [
+        bbenoist.nix
+        # xr0master.webstorm-intellij-darcula-theme
       ];
     };
   };

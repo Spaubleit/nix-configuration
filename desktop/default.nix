@@ -1,18 +1,13 @@
-{ pkgs, ... }: {
-    home.packages = [
+{ pkgs, ags, ... }: {
 
-    ];
+    imports = [ ags.homeManagerModules.default ];
 
-    wayland.windowManager.hyprland = {
+    programs.ags = {
         enable = true;
-        reloadConfig = true;
-        systemdIntegration = true;
-        recommendedEnvironment = true;
+        configDir = ./ags;
+    };
 
-        xwayladn.enable = true;
+    home = {
 
-        settings = {
-            "$mod" = "SUPER";
-        };
     };
 }
