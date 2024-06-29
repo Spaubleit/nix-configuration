@@ -97,6 +97,8 @@
       i2p
       wireplumber
       firefoxpwa
+      deploy-rs
+      nixos-anywhere
     
       # Apps
       google-chrome
