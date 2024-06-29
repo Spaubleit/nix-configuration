@@ -43,15 +43,15 @@
           ];
         };
         desktop = nixpkgs.lib.nixosSystem {
-          inherit system;
+          inherit system pkgs;
           specialArgs = { inherit inputs; };
           modules = [
-            ./configuration.nix
+            ./hosts/desktop/configuration.nix
             ./klipper.nix
             home-manager.nixosModules.home-manager {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.spaubleit = import ./home.nix { 
+              home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
                 config = {};
                 inherit pkgs pkgs-stable pkgs-webstorm system devenv ags;
               };
@@ -60,10 +60,11 @@
         };
       };
       deploy.nodes.media-server = {
-        hostname = "media-server";
+        hostname = "media-server.local";
+        sshUser = "adminn";
         profiles.system = {
           user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfiguration.media-server;
+          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.media-server;
         };
       };
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;

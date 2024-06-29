@@ -142,14 +142,8 @@
         count = 165536;
         startGid = 10000;
       } ];
-      packages = with pkgs; [
-        vial
-      ];
     };
   };
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -177,11 +171,21 @@
       };
     };
   };
-
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    nssmdns6 = true;
+    publish = {
+      enable = true;
+      domain = true;
+      addresses = true;
+    };
+  };
 
   networking = {
     firewall = {
@@ -189,9 +193,6 @@
       allowedUDPPorts = [ 2200 21027 ];
     };
   };
-  
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

@@ -132,7 +132,8 @@
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
       pkgs-webstorm.jetbrains.webstorm
       proton-pass
-      
+      vial
+
       # Messengers
       tdesktop
       slack
