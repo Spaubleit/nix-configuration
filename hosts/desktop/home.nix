@@ -1,8 +1,6 @@
-{ config, pkgs, pkgs-stable, pkgs-webstorm, devenv, system, ags, ... }:
-{
+{ inputs, pkgs, pkgs-webstorm, pkgs-stable, ... }: {
   imports = [
-    # ./desktop/default.nix
-    ags.homeManagerModules.default
+    # inputs.ags.homeManagerModules.default
   ];
   wayland.windowManager.hyprland = {
     enable = true;
@@ -67,8 +65,8 @@
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
 
@@ -80,7 +78,7 @@
     # sessionVariables = {
     #   NIX_LD = pkgs.lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
     # };
-    
+
     packages = with pkgs; [
       # Utils
       cloc
@@ -99,7 +97,7 @@
       firefoxpwa
       deploy-rs
       nixos-anywhere
-    
+
       # Apps
       google-chrome
       tor-browser
@@ -141,20 +139,20 @@
       skypeforlinux
       wire-desktop
       mattermost-desktop
-      
+
       # Graphics
       krita
       gimp
-      
+
       # gnome
       gnome.gnome-tweaks
       gnomeExtensions.syncthing-indicator
       gnomeExtensions.tray-icons-reloaded
       gnomeExtensions.pop-shell
       gnomeExtensions.smart-auto-move
-      
-      devenv.packages.x86_64-linux.devenv
-      wineWowPackages.stable     
+
+      inputs.devenv.packages.x86_64-linux.devenv
+      wineWowPackages.stable
 
       # libs
       libunwind # for steam in bottles
@@ -162,50 +160,40 @@
 
     file = {
       ".config/containers/policy.json".text = ''
-          {
-            "default": [{"type": "insecureAcceptAnything"}]
-          }
+        {
+          "default": [{"type": "insecureAcceptAnything"}]
+        }
       '';
       ".config/containers/registries.conf".text = ''
-          unqualified-search-registries = [ "docker.io" ]
-        '';
+        unqualified-search-registries = [ "docker.io" ]
+      '';
     };
   };
-  
-  services.syncthing = {
-    enable = true;
-  };
+
+  services.syncthing = { enable = true; };
 
   systemd.user = {
     startServices = "sd-switch";
     services.ags = {
-      Unit = {
-        Description = "Run ags";
-      };
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      Unit = { Description = "Run ags"; };
+      Install = { WantedBy = [ "default.target" ]; };
       Service = {
         # todo refer home-manager environment package
         ExecStart = "${pkgs.ags}/bin/ags";
       };
     };
   };
-  
+
   programs = {
     firefox = {
       enable = true;
       nativeMessagingHosts = [ pkgs.firefoxpwa ];
     };
-    ags = {
-      enable = true;
-      configDir = ./desktop/ags;
-      extraPackages = with pkgs; [
-        gtksourceview
-        webkitgtk
-        accountsservice
-      ];
-    };
+    # ags = {
+    #   enable = true;
+    #   configDir = ./desktop/ags;
+    #   extraPackages = with pkgs; [ gtksourceview webkitgtk accountsservice ];
+    # };
     bash.enable = true;
     direnv = {
       enable = true;
@@ -223,27 +211,23 @@
           height = 40;
           margin = "6";
 
-          modules-left = ["hyprland/workspaces"];
-          modules-center = ["clock"];
-          modules-right = ["hyprland/language"];
+          modules-left = [ "hyprland/workspaces" ];
+          modules-center = [ "clock" ];
+          modules-right = [ "hyprland/language" ];
         };
       };
     };
     hyprlock = {
       enable = true;
       settings = {
-        background = {
-          color = "rgba(25, 20, 20, 0.5)";
-        };
-        input-field = {
-          size = "200,50";
-        };
+        background = { color = "rgba(25, 20, 20, 0.5)"; };
+        input-field = { size = "200,50"; };
       };
     };
     starship = {
       enable = true;
       enableBashIntegration = true;
-      settings = {};
+      settings = { };
     };
     home-manager.enable = true;
     # steam.enable = true;
@@ -254,10 +238,11 @@
         "files.autoSave" = "onWindowChange";
         "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
       };
-      extensions = with pkgs.vscode-extensions; [
-        bbenoist.nix
-        # xr0master.webstorm-intellij-darcula-theme
-      ];
+      extensions = with pkgs.vscode-extensions;
+        [
+          bbenoist.nix
+          # xr0master.webstorm-intellij-darcula-theme
+        ];
     };
   };
 }

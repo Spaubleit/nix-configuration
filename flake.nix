@@ -6,6 +6,7 @@
     devenv.url = "github:cachix/devenv";
     ags.url = "github:Aylur/ags";
     deploy-rs.url = "github:serokell/deploy-rs";
+    nur.url = "github:nix-community/NUR";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,9 +15,11 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    webstorm.url = "github:nixos/nixpkgs/806075be2bdde71895359ed18cb530c4d323e6f6";
+    webstorm.url =
+      "github:nixos/nixpkgs/806075be2bdde71895359ed18cb530c4d323e6f6";
   };
-  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, home-manager, disko, devenv, ags, webstorm, deploy-rs, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, home-manager, disko, devenv
+    , ags, webstorm, deploy-rs, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -32,28 +35,35 @@
         inherit system;
         config.allowUnfree = true;
       };
+      createSystem = modules: nixpkgs.lib.nixosSystem {
+        inherit system modules;
+        specialArgs = { inherit inputs pkgs pkgs-stable pkgs-webstorm; };
+      };
     in {
       nixosConfigurations = {
-        media-server = nixpkgs.lib.nixosSystem {
-          inherit system;
-
-          modules = [
-            disko.nixosModules.disko
-            ./hosts/media-server/configuration.nix
-          ];
-        };
+        media-server = createSystem [
+          ./modules/common.nix
+          ./hardware/dell-laptop.nix
+          ./hosts/media-server/default.nix
+        ];
+        # desktop-unstable = createSystem [
+        #   ./modules/common.nix
+        #   ./hardware/desktop.nix
+        #   ./hosts/desktop/default.nix
+        # ];
         desktop = nixpkgs.lib.nixosSystem {
           inherit system pkgs;
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
           modules = [
-            ./hosts/desktop/configuration.nix
-            ./klipper.nix
-            home-manager.nixosModules.home-manager {
+            inputs.nur.nixosModules.nur
+            ./configuration.nix
+            ./hosts/desktop/klipper.nix
+            home-manager.nixosModules.home-manager
+            {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
-                config = {};
-                inherit pkgs pkgs-stable pkgs-webstorm system devenv ags;
+                inherit inputs pkgs pkgs-stable pkgs-webstorm;
               };
             }
           ];
@@ -61,10 +71,11 @@
       };
       deploy.nodes.media-server = {
         hostname = "media-server.local";
-        sshUser = "adminn";
+        sshUser = "root";
         profiles.system = {
           user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.media-server;
+          path = deploy-rs.lib.x86_64-linux.activate.nixos
+            self.nixosConfigurations.media-server;
         };
       };
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;

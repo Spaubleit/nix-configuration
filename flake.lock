@@ -488,6 +488,21 @@
         "type": "github"
       }
     },
+    "nur": {
+      "locked": {
+        "lastModified": 1719665790,
+        "narHash": "sha256-fSlHsOBrI8SC/4jCojpHftwpwyhvf7WzvV5mBjOr7Aw=",
+        "owner": "nix-community",
+        "repo": "NUR",
+        "rev": "a0498a771e9d6d3f66dba3bd166a9ebf3cc3cb8c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "NUR",
+        "type": "github"
+      }
+    },
     "poetry2nix": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -550,6 +565,7 @@
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_5",
         "nixpkgs-stable": "nixpkgs-stable_2",
+        "nur": "nur",
         "webstorm": "webstorm"
       }
     },

@@ -1,13 +1,13 @@
 { pkgs, ags, ... }: {
 
-    imports = [ ags.homeManagerModules.default ];
+  imports = [ ags.homeManagerModules.default ];
 
-    programs.ags = {
-        enable = true;
-        configDir = ./ags;
-    };
+  programs.ags = {
+    enable = true;
+    configDir = ./ags;
+  };
 
-    home = {
+  home = {
 
-    };
+  };
 }
