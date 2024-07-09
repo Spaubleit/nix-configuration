@@ -1,6 +1,7 @@
-{ inputs, pkgs, pkgs-webstorm, pkgs-stable, ... }: {
+{ inputs, config, pkgs, pkgs-webstorm, pkgs-stable, ... }: {
   imports = [
     # inputs.ags.homeManagerModules.default
+    # inputs.nur.hmModules.nur
   ];
   wayland.windowManager.hyprland = {
     enable = true;
@@ -101,6 +102,7 @@
       # Apps
       google-chrome
       tor-browser
+      yandex-browser
       # pkgs-unstable.jetbrains.gateway
       jetbrains-toolbox
       mozillavpn
@@ -188,6 +190,57 @@
     firefox = {
       enable = true;
       nativeMessagingHosts = [ pkgs.firefoxpwa ];
+      profiles = let
+        addons = config.nur.repos.rycee.firefox-addons;
+        default-extensions = with addons; [
+          sidebery
+          tabliss
+        ];
+        react-extensions = with addons; [
+          react-devtools
+          reduxdevtools
+        ];
+        settings = {
+          "browser.ctrlTab.sortByRecentlyUsed" = true; # Ctrl+Tab in recent order
+          "browser.startup.page" = 3; # Open previous windows on startup
+          "browser.tabs.loadInBackground" = false; # Switch to opened tab
+          "browser.urlbar.showSearchSuggestionsFirst" = false; # Show history first
+          "extensions.autoDisableScopes" = 0; # Enable extansions
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enable userChrome.css
+          "services.sync.engine.tabs" = false;
+          "services.sync.engine.prefs" = false;
+          "services.sync.engine.addons" = false;
+          "devtools.cache.disabled" = true;
+        };
+        userChrome = ''
+          #main-window #titlebar {
+            overflow: hidden;
+            transition: height 0.3s 0.3s !important;
+          }
+          /* Default state: Set initial height to enable animation */
+          #main-window #titlebar { height: 3em !important; }
+          #main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
+          #main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
+          /* Hidden state: Hide native tabs strip */
+          #main-window[titlepreface*="[Sidebery]"] #titlebar { height: 0 !important; }
+          /* Hidden state: Fix z-index of active pinned tabs */
+          #main-window[titlepreface*="[Sidebery]"] #tabbrowser-tabs { z-index: 0 !important; }
+        '';
+      in {
+        personal = {
+          inherit settings userChrome;
+          id = 0;
+          isDefault = true;
+          extensions = (with addons; [ adnauseam proton-pass ]) ++ default-extensions ++ react-extensions;
+          search.default = "DuckDuckGo";
+        };
+        kr = {
+          inherit settings userChrome;
+          id = 1;
+          extensions = default-extensions ++ react-extensions;
+          search.default = "DuckDuckGo";
+        };
+      };
     };
     # ags = {
     #   enable = true;
