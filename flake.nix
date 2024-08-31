@@ -18,24 +18,23 @@
     webstorm.url =
       "github:nixos/nixpkgs/806075be2bdde71895359ed18cb530c4d323e6f6";
   };
-  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, home-manager, disko, devenv
-    , ags, webstorm, deploy-rs, ... }:
+  outputs = inputs@{ self, deploy-rs, ... }:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        config.permittedInsecurePackages = [ "electron-28.3.1" ];
+        config.permittedInsecurePackages = [ "electron-28.3.1" "yandex-browser-stable-24.4.1.951-1" ];
       };
-      pkgs-stable = import nixpkgs-stable {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      pkgs-webstorm = import webstorm {
+      pkgs-stable = import inputs.nixpkgs-stable {
         inherit system;
         config.allowUnfree = true;
       };
-      createSystem = modules: nixpkgs.lib.nixosSystem {
+      pkgs-webstorm = import inputs.webstorm {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      createSystem = modules: inputs.nixpkgs.lib.nixosSystem {
         inherit system modules;
         specialArgs = { inherit inputs pkgs pkgs-stable pkgs-webstorm; };
       };
@@ -51,20 +50,24 @@
         #   ./hardware/desktop.nix
         #   ./hosts/desktop/default.nix
         # ];
-        desktop = nixpkgs.lib.nixosSystem {
+        desktop = inputs.nixpkgs.lib.nixosSystem {
           inherit system pkgs;
           specialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
           modules = [
             inputs.nur.nixosModules.nur
             ./configuration.nix
             ./hosts/desktop/klipper.nix
-            home-manager.nixosModules.home-manager
+            inputs.home-manager.nixosModules.home-manager
             {
+              home-manager.extraSpecialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
-                inherit inputs pkgs pkgs-stable pkgs-webstorm;
-              };
+              home-manager.backupFileExtension = "backup";
+              home-manager.sharedModules = [ inputs.nur.hmModules.nur ];
+              home-manager.users.spaubleit.imports = [ ./hosts/desktop/home.nix ];
+              # home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
+              #   inherit inputs pkgs pkgs-stable pkgs-webstorm;
+              # };
             }
           ];
         };

@@ -1,11 +1,34 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.supportedFilesystems = [ "ntfs" ];
+
   networking = {
     hostName = "desktop";
     networkmanager.enable = true;
   };
 
-  boot.supportedFilesystems = [ "ntfs" ];
+  # Set your time zone.
+  time.timeZone = "Europe/Minsk";
 
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.utf8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_GB.utf8";
+    LC_IDENTIFICATION = "en_GB.utf8";
+    LC_MEASUREMENT = "en_GB.utf8";
+    LC_MONETARY = "en_GB.utf8";
+    LC_NAME = "en_GB.utf8";
+    LC_NUMERIC = "en_GB.utf8";
+    LC_PAPER = "en_GB.utf8";
+    LC_TELEPHONE = "en_GB.utf8";
+    LC_TIME = "en_GB.utf8";
+  };
+
+  # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
     displayManager.gdm = {
@@ -13,20 +36,26 @@
       wayland = true;
     };
     desktopManager.gnome.enable = true;
+    xkb = {
+      layout = "us";
+      variant = "dvp";
+    };
   };
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    drivers = [ pkgs.samsung-unified-linux-driver ];
+  };
   hardware.sane.enable = true;
   hardware.sane.extraBackends = [ pkgs.hplipWithPlugin ];
 
-   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   security.pam.services.hyprlock = { };
-    services = {
+
+  services = {
     flatpak.enable = true;
     pipewire = {
       enable = true;
@@ -44,10 +73,11 @@
     moonraker.enable = true;
     fluidd.enable = true;
   };
-  
+
   services.udev.packages = with pkgs; [ vial ];
 
   programs.dconf.enable = true;
+
   virtualisation = {
     libvirtd.enable = true;
     virtualbox = {
@@ -64,10 +94,18 @@
     };
   };
 
-  nix.gc = {
-    automatic = true;
-    dates = "monthly";
-    options = "--delete-older-than 30d";
+  # enable flakes
+  nix = {
+    package = pkgs.nixFlakes;
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      auto-optimise-store = true;
+    };
+    gc = {
+      automatic = true;
+      dates = "monthly";
+      options = "--delete-older-than 1m";
+    };
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -90,15 +128,37 @@
   };
 
   # List packages installed in system profile. To search, run:
-  environment.systemPackages = with pkgs; [ virt-manager ];
+  # $ nix search wget
+  environment.systemPackages = with pkgs;
+    [
+      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      #  wget
+      virt-manager
+    ];
 
   programs = {
-    steam.enable = true;
-    hamster.enable = true;
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      dedicatedServer.openFirewall = true;
+      localNetworkGameTransfers.openFirewall = true;
+    };
     nix-ld.enable = true;
     hyprland = {
       enable = true;
       xwayland = { enable = true; };
+    };
+  };
+  # List services that you want to enable:
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    nssmdns6 = true;
+    publish = {
+      enable = true;
+      domain = true;
+      addresses = true;
     };
   };
 
@@ -116,4 +176,5 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
+
 }

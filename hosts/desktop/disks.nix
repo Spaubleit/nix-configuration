@@ -1,5 +1,5 @@
 _ :
-let disks = { sda = "/dev/sda"; }
+let disks = { sda = "/dev/sda"; };
 in {
   disco.devices.disk = {
     sda = {

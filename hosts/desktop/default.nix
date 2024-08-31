@@ -7,6 +7,7 @@
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.users.spaubleit = import ./home.nix;
+      
     }
   ];
 }

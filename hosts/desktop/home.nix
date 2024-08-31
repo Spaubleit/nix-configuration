@@ -102,8 +102,9 @@
       # Apps
       google-chrome
       tor-browser
-      yandex-browser
+      # yandex-browser download failure
       # pkgs-unstable.jetbrains.gateway
+      # jetbrains-toolbox download failure
       jetbrains-toolbox
       mozillavpn
       obsidian
@@ -115,7 +116,6 @@
       gmsh # for freecad
       calculix # for freecad
       prusa-slicer
-      printrun
       mpv
       blender
       psst
@@ -133,6 +133,8 @@
       pkgs-webstorm.jetbrains.webstorm
       proton-pass
       vial
+      vopono
+      stremio
 
       # Messengers
       tdesktop
@@ -147,7 +149,7 @@
       gimp
 
       # gnome
-      gnome.gnome-tweaks
+      gnome-tweaks
       gnomeExtensions.syncthing-indicator
       gnomeExtensions.tray-icons-reloaded
       gnomeExtensions.pop-shell
@@ -203,7 +205,6 @@
         settings = {
           "browser.ctrlTab.sortByRecentlyUsed" = true; # Ctrl+Tab in recent order
           "browser.startup.page" = 3; # Open previous windows on startup
-          "browser.tabs.loadInBackground" = false; # Switch to opened tab
           "browser.urlbar.showSearchSuggestionsFirst" = false; # Show history first
           "extensions.autoDisableScopes" = 0; # Enable extansions
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enable userChrome.css
@@ -290,6 +291,7 @@
         "window.openFoldersInNewWindow" = "on";
         "files.autoSave" = "onWindowChange";
         "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
+        "git.autofetch" = true;
       };
       extensions = with pkgs.vscode-extensions;
         [
