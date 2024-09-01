@@ -45,32 +45,32 @@
           ./hardware/dell-laptop.nix
           ./hosts/media-server/default.nix
         ];
-        # desktop-unstable = createSystem [
-        #   ./modules/common.nix
-        #   ./hardware/desktop.nix
-        #   ./hosts/desktop/default.nix
-        # ];
-        desktop = inputs.nixpkgs.lib.nixosSystem {
-          inherit system pkgs;
-          specialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
-          modules = [
-            inputs.nur.nixosModules.nur
-            ./configuration.nix
-            ./hosts/desktop/klipper.nix
-            inputs.home-manager.nixosModules.home-manager
-            {
-              home-manager.extraSpecialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
-              home-manager.sharedModules = [ inputs.nur.hmModules.nur ];
-              home-manager.users.spaubleit.imports = [ ./hosts/desktop/home.nix ];
-              # home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
-              #   inherit inputs pkgs pkgs-stable pkgs-webstorm;
-              # };
-            }
-          ];
-        };
+        desktop = createSystem [
+          ./modules/common.nix
+          ./hardware/desktop.nix
+          ./hosts/desktop/default.nix
+        ];
+        # desktop = inputs.nixpkgs.lib.nixosSystem {
+        #   inherit system pkgs;
+        #   specialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
+        #   modules = [
+        #     inputs.nur.nixosModules.nur
+        #     ./configuration.nix
+        #     ./hosts/desktop/klipper.nix
+        #     inputs.home-manager.nixosModules.home-manager
+        #     {
+        #       home-manager.extraSpecialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
+        #       home-manager.useGlobalPkgs = true;
+        #       home-manager.useUserPackages = true;
+        #       home-manager.backupFileExtension = "backup";
+        #       home-manager.sharedModules = [ inputs.nur.hmModules.nur ];
+        #       home-manager.users.spaubleit.imports = [ ./hosts/desktop/home.nix ];
+        #       # home-manager.users.spaubleit = import ./hosts/desktop/home.nix {
+        #       #   inherit inputs pkgs pkgs-stable pkgs-webstorm;
+        #       # };
+        #     }
+        #   ];
+        # };
       };
       deploy.nodes.media-server = {
         hostname = "media-server.local";

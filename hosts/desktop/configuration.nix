@@ -1,31 +1,12 @@
 { config, pkgs, ... }: {
+
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {
     hostName = "desktop";
     networkmanager.enable = true;
-  };
-
-  # Set your time zone.
-  time.timeZone = "Europe/Minsk";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.utf8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_GB.utf8";
-    LC_IDENTIFICATION = "en_GB.utf8";
-    LC_MEASUREMENT = "en_GB.utf8";
-    LC_MONETARY = "en_GB.utf8";
-    LC_NAME = "en_GB.utf8";
-    LC_NUMERIC = "en_GB.utf8";
-    LC_PAPER = "en_GB.utf8";
-    LC_TELEPHONE = "en_GB.utf8";
-    LC_TIME = "en_GB.utf8";
   };
 
   # Enable the X11 windowing system.
@@ -36,10 +17,6 @@
       wayland = true;
     };
     desktopManager.gnome.enable = true;
-    xkb = {
-      layout = "us";
-      variant = "dvp";
-    };
   };
 
   # Enable CUPS to print documents.
@@ -98,7 +75,6 @@
   nix = {
     package = pkgs.nixFlakes;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
     };
     gc = {
@@ -175,6 +151,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.05"; # Did you read the comment?
-
+  system.stateVersion = "24.05"; # Did you read the comment?
 }
