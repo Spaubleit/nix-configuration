@@ -13,7 +13,7 @@ let
       "gcode_macro GENERATE_SHAPER_GRAPHS" = {
         description =
           "Generates input shaper resonances graphs for analysis. Uses the AXIS parameter for if you only want to do one axis at a time, (eg. GENERATE_SHAPER_GRAPHS AXIS=X)";
-        gcode = ''
+        gcode = "
           {% if params.AXIS is defined %}
               {% if params.AXIS|lower == 'x' %}
                   G28
@@ -31,7 +31,7 @@ let
               TEST_RESONANCES AXIS=X
               TEST_RESONANCES AXIS=Y
           {% endif %}
-        '';
+        ";
       };
     };
     bed_mesh = {
@@ -45,9 +45,9 @@ let
         fade_end = 10;
         mesh_pps = "2,2";
         algorithm = "bicubic";
-        bicubic_tension = 5.0e-2;
+        bicubic_tension = 0.05;
       };
-      "gcode_macro BED_MESH".gcode = ''
+      "gcode_macro BED_MESH".gcode = "
         G28
         M117 Heating bed...
         M190 S{params.BED_TEMP|default(70, true)}
@@ -58,7 +58,7 @@ let
         BED_MESH_CALIBRATE
         G0 X1 Y115 Z50 F10000
         SAVE_CONFIG
-      '';
+      ";
     };
     display = {
       display = {
@@ -71,7 +71,7 @@ let
       };
     };
     gantry_calibration = {
-      "gcode_macro GANTRY_CALIBRATION".gcode = ''
+      "gcode_macro GANTRY_CALIBRATION".gcode = "
         {% set my_current = 0.12 %}
         {% set oldcurrent = printer.configfile.settings[\"tmc2209 stepper_z\"].run_current %}
         {% set x_max = printer.toolhead.axis_maximum.x %}
@@ -103,7 +103,7 @@ let
         G1 Z{z_max -30} F{6 * 60}
         G4 P200
         G28 Z
-      '';
+      ";
       "gcode_macro G34".gcode = "GANTRY_CALIBRATION";
       "menu __main __setup __calib __gantry_calibrate" = {
         type = "command";
@@ -114,7 +114,7 @@ let
       force_move.enable_force_move = true;
     };
     macros = {
-      "gcode_macro LOAD_FILAMENT".gcode = ''
+      "gcode_macro LOAD_FILAMENT".gcode = "
         SAVE_GCODE_STATE NAME=load_state
         G91
         # Heat up hotend to provided temp or 220 as default as that should work OK with most filaments.
@@ -134,8 +134,8 @@ let
         M400e
         M117 Filament loaded!
         RESTORE_GCODE_STATE NAME=load_state        
-      '';
-      "gcode_macro UNLOAD_FILAMENT".gcode = ''
+      ";
+      "gcode_macro UNLOAD_FILAMENT".gcode = "
           SAVE_GCODE_STATE NAME=unload_state
           G91
           {% if params.TEMP is defined or printer.extruder.can_extrude|lower == 'false' %}
@@ -172,21 +172,21 @@ let
           G91
           G1 E-50 F1000
           RESTORE_GCODE_STATE NAME=M600_state
-      '';
-      "gcode_macro Z_Offset".gcode = ''
+      ";
+      "gcode_macro Z_Offset".gcode = "
         M117 Heating bed & nozzle...
         M104 S{150}
         M190 S{params.BED_TEMP|default(60, true)}
         G28
         TEMPERATURE_WAIT SENSOR=heater_bed MINIMUM={params.BED_TEMP|default(60, true)}
         PROBE_CALIBRATE
-      '';
+      ";
       "pause_resume" = { };
       "gcode_macro CANCEL_PRINT" = {
         description = "Cancel the actual running print";
         rename_existing = "CANCEL_PRINT_BASE";
         variable_park = "True";
-        gcode = ''
+        gcode = "
           {% if printer.pause_resume.is_paused|lower == 'false' and park|lower == 'true'%}
             _TOOLHEAD_PARK_PAUSE_CANCEL
           {% endif %}
@@ -194,7 +194,7 @@ let
           M106 S0
           CANCEL_PRINT_BASE
           M84
-        '';
+        ";
       };    
     };
     pico_usb_adxl = {
@@ -211,7 +211,7 @@ let
       "gcode_macro GENERATE_SHAPER_GRAPHS" = {
         description =
           "Genarates input shaper resonances graphs for analysis. Uses the AXIS parameter for if you only want to do one axis at a time, (eg. GENERATE_SHAPER_GRAPHS AXIS=X)";
-        gcode = ''
+        gcode = "
           % if params.AXIS is defined %}
               {% if params.AXIS|lower == 'x' %}
                   G28
@@ -229,11 +229,11 @@ let
               TEST_RESONANCES AXIS=X
               TEST_RESONANCES AXIS=Y
           {% endif %}
-        '';
+        ";
       };
     };
     print_start_end = {
-      "gcode_macro START_PRINT".gcode = ''
+      "gcode_macro START_PRINT".gcode = "
         {% set BED = params.BED|default(60)|float %}
         {% set EXTRUDER = params.EXTRUDER|default(190)|float %}
         M104 S{EXTRUDER}
@@ -250,8 +250,8 @@ let
         G92 E0
         G1 X60 E6 F1000 ; intro line
         G1 X100 E6 F1000 ; intro line
-      '';
-      "gcode_macro END_PRINT".gcode = ''
+      ";
+      "gcode_macro END_PRINT".gcode = "
         M400                           
         G92 E0                         
         G1 E-6.0 F3600               
@@ -282,7 +282,7 @@ let
         G90 ; use absolute coordinates
         G0 X5 Y{max_y} F3600       
         M84 ; disable motors
-      '';
+      ";
     };
     raspberry = {
       "temperature_sensor Raspberry" = {
@@ -307,10 +307,10 @@ let
         speed = 100;
         screw_thread = "CCW-M4";
       };
-      "gcode_macro screws_adjust".gcode = ''
+      "gcode_macro screws_adjust".gcode = "
         M117 Tilting...
         SCREWS_TILT_CALCULATE
-      '';
+      ";
     };
   };
   drivers = rec {
@@ -601,7 +601,7 @@ in {
           speed = 5;
           samples = 2;
           sample_retract_dist = 2;
-          samples_tolerance = 1.0e-2;
+          samples_tolerance = 0.01;
           samples_result = "median";
           samples_tolerance_retries = 5;
         };
@@ -629,25 +629,25 @@ in {
         "bed_mesh SV06_mesh" = {
           version = 1;
           # increase bring distance down
-          points = ''
-            -0.288281, -0.168594, -0.091875, -0.116250, -0.238438
-            -0.213281, -0.114219, -0.044531, -0.061875, -0.163594
-            -0.203438, -0.105469, -0.054844, -0.055625, -0.163125
-            -0.183906, -0.091875, -0.021719, -0.034844, -0.136250
-            -0.178906, -0.058750, 0.023125, 0.004375, -0.108125
-          '';
+          points = "
+            -0.352031, -0.208125, -0.088125, -0.033281, -0.054063
+            -0.345156, -0.200625, -0.088438, -0.066094, -0.103125
+            -0.379531, -0.228750, -0.087969, -0.054844, -0.090938
+            -0.324844, -0.188438, -0.082969, -0.040469, -0.083281
+            -0.290781, -0.143594, -0.019844, 0.008594, -0.053438
+          ";
           x_count = 5;
           y_count = 5;
           mesh_x_pps = 2;
           mesh_y_pps = 2;
           algo = "bicubic";
-          tension = 5.0e-2;
+          tension = 0.05;
           min_x = 28.0;
           max_x = 205.0;
           min_y = 23.0;
           max_y = 200.0;
         };
-        probe.z_offset = 0.835; # increase bring distance down
+        probe.z_offset = 0.940; # increase bring distance down
       }
       functions.display
       functions.raspberry
