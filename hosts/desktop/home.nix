@@ -105,7 +105,6 @@
       # yandex-browser download failure
       # pkgs-unstable.jetbrains.gateway
       # jetbrains-toolbox download failure
-      jetbrains-toolbox
       mozillavpn
       obsidian
       libreoffice
