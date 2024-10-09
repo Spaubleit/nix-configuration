@@ -1,7 +1,6 @@
 { config, pkgs, ... }: {
 
   # Bootloader.
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {

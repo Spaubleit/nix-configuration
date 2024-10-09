@@ -1,11 +1,23 @@
 _ :
 let disks = { 
-  main = "/dev/nvme0n1p1"; 
+  main = "/dev/nvme0n1"; 
   store = "/dev/nvme1n1";
-  raid1 = "/dev/sdc";
-  raid2 = "/dev/sdd";
+  raid1 = "/dev/sda";
+  raid2 = "/dev/sdc";
 };
 in {
+  boot.loader.efi.efiSysMountPoint = "/boot";
+  systemd.tmpfiles.settings = {
+    "mounting" = {
+      "/mnt/data" = {
+        d = {
+          group = "users";
+          mode = "0755";
+          user = "spaubleit";
+        };
+      };
+    };
+  };
   disko.devices.disk = {
     main = {
       type = "disk";
@@ -79,7 +91,11 @@ in {
             size = "100%";
             content = {
               type = "btrfs";
-              extraArgs = [ "-f" "-m raid1 -d raid1 ${disks.raid1} ${disks.raid2}" ];
+              extraArgs = [ 
+                "-f" 
+                "-m raid1 -d raid1" 
+                disks.raid2 
+              ];
               subvolumes = {
                 "@data" = {
                   mountpoint = "/mnt/data";

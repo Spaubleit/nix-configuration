@@ -85,79 +85,79 @@
       cloc
       yarn
       git
-      unrar
-      python3Full
-      usbutils
-      steam-run
-      ventoy-full
-      podman-compose
-      devbox
-      nix-direnv
-      i2p
-      wireplumber
+      # unrar
+      # python3Full
+      # usbutils
+      # steam-run
+      # ventoy-full
+      # podman-compose
+      # devbox
+      # nix-direnv
+      # i2p
+      # wireplumber
       firefoxpwa
       deploy-rs
-      nixos-anywhere
+      # nixos-anywhere
 
       # Apps
       google-chrome
-      tor-browser
+      # tor-browser
       # yandex-browser download failure
       # jetbrains-toolbox download failure
-      mozillavpn
+      # mozillavpn
       obsidian
       libreoffice
       spotify
-      protonvpn-gui
+      # protonvpn-gui
       qbittorrent
       freecad
-      gmsh # for freecad
-      calculix # for freecad
       prusa-slicer
       mpv
       blender
-      psst
-      discord
-      lutris
-      gnome.gnome-boxes
+      # psst
+      # discord
+      # lutris
+      # gnome.gnome-boxes
       dbeaver-bin
-      kitty
+      # kitty
       authenticator
       megasync
-      minigalaxy
-      obs-studio
+      # minigalaxy
+      # obs-studio
       # bottles
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
-      pkgs-webstorm.jetbrains.webstorm
-      proton-pass
+      # pkgs-webstorm.jetbrains.webstorm
+      # proton-pass
       vial
-      vopono
-      stremio
+      # vopono
+      # stremio
 
       # Messengers
       tdesktop
       slack
-      zoom-us
-      skypeforlinux
+      # zoom-us
+      # skypeforlinux
       wire-desktop
       mattermost-desktop
 
       # Graphics
-      krita
-      gimp
+      # krita
+      # gimp
 
       # gnome
       gnome-tweaks
       gnomeExtensions.syncthing-indicator
       gnomeExtensions.tray-icons-reloaded
-      gnomeExtensions.pop-shell
+      # gnomeExtensions.pop-shell
       gnomeExtensions.smart-auto-move
 
-      inputs.devenv.packages.x86_64-linux.devenv
-      wineWowPackages.stable
+      # inputs.devenv.packages.x86_64-linux.devenv
+      # wineWowPackages.stable
 
       # libs
       libunwind # for steam in bottles
+      gmsh # for freecad
+      calculix # for freecad
     ];
 
     file = {
@@ -200,7 +200,12 @@
           react-devtools
           reduxdevtools
         ];
+        search = {
+          force = true;
+          default = "DuckDuckGo";
+        };
         settings = {
+          "browser.tabs.loadInBackground" = false; # Switch to opened tab
           "browser.ctrlTab.sortByRecentlyUsed" = true; # Ctrl+Tab in recent order
           "browser.startup.page" = 3; # Open previous windows on startup
           "browser.urlbar.showSearchSuggestionsFirst" = false; # Show history first
@@ -227,17 +232,15 @@
         '';
       in {
         personal = {
-          inherit settings userChrome;
+          inherit settings search userChrome;
           id = 0;
           isDefault = true;
           extensions = (with addons; [ adnauseam proton-pass ]) ++ default-extensions ++ react-extensions;
-          search.default = "DuckDuckGo";
         };
         kr = {
-          inherit settings userChrome;
+          inherit settings search userChrome;
           id = 1;
           extensions = default-extensions ++ react-extensions;
-          search.default = "DuckDuckGo";
         };
       };
     };
