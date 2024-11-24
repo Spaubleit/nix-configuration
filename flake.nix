@@ -16,7 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     webstorm.url =
-      "github:nixos/nixpkgs/806075be2bdde71895359ed18cb530c4d323e6f6";
+      "github:nixos/nixpkgs/6b5019a48f876f3288efc626fa8b70ad0c64eb46";
   };
   outputs = inputs@{ self, deploy-rs, ... }:
     let
@@ -24,7 +24,11 @@
       pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        config.permittedInsecurePackages = [ "electron-28.3.1" "yandex-browser-stable-24.4.1.951-1" ];
+        config.permittedInsecurePackages = [ 
+          "electron-28.3.1" 
+          "wire-desktop-3.36.3462"
+          "yandex-browser-stable-24.4.1.951-1" 
+        ];
       };
       pkgs-stable = import inputs.nixpkgs-stable {
         inherit system;

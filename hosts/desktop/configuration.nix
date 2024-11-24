@@ -52,8 +52,6 @@
 
   services.udev.packages = with pkgs; [ vial ];
 
-  programs.dconf.enable = true;
-
   virtualisation = {
     libvirtd.enable = true;
     virtualbox = {
@@ -72,7 +70,7 @@
 
   # enable flakes
   nix = {
-    package = pkgs.nixFlakes;
+    package = pkgs.nixVersions.stable;
     settings = {
       auto-optimise-store = true;
     };
@@ -117,6 +115,16 @@
       remotePlay.openFirewall = true;
       dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
+      package = with pkgs; steam.override {
+        extraPkgs = pkgs: [
+          jq
+          cabextract
+          wget
+          # fortivpn
+          iproute2
+          ppp
+        ];
+      };
     };
     nix-ld.enable = true;
     hyprland = {

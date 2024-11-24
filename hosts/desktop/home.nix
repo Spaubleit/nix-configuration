@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, pkgs-webstorm, pkgs-stable, ... }: {
+{ inputs, config, pkgs, pkgs-stable, ... }: {
   imports = [
     # inputs.ags.homeManagerModules.default
     # inputs.nur.hmModules.nur
@@ -85,11 +85,14 @@
       cloc
       yarn
       git
+      nodejs
+      corepack
+      distrobox
       # unrar
       # python3Full
       # usbutils
       # steam-run
-      # ventoy-full
+      ventoy-full
       # podman-compose
       # devbox
       # nix-direnv
@@ -98,35 +101,34 @@
       firefoxpwa
       deploy-rs
       # nixos-anywhere
+      p7zip
 
       # Apps
       google-chrome
       # tor-browser
       # yandex-browser download failure
       # jetbrains-toolbox download failure
-      # mozillavpn
       obsidian
       libreoffice
       spotify
-      # protonvpn-gui
+      protonvpn-gui
       qbittorrent
       freecad
       prusa-slicer
       mpv
       blender
       # psst
-      # discord
       # lutris
       # gnome.gnome-boxes
       dbeaver-bin
-      # kitty
+      kitty
       authenticator
       megasync
       # minigalaxy
       # obs-studio
       # bottles
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
-      # pkgs-webstorm.jetbrains.webstorm
+      jetbrains.webstorm
       # proton-pass
       vial
       # vopono
@@ -135,14 +137,15 @@
       # Messengers
       tdesktop
       slack
+      discord
       # zoom-us
       # skypeforlinux
       wire-desktop
       mattermost-desktop
 
       # Graphics
-      # krita
-      # gimp
+      krita
+      gimp
 
       # gnome
       gnome-tweaks
@@ -151,13 +154,15 @@
       # gnomeExtensions.pop-shell
       gnomeExtensions.smart-auto-move
 
-      # inputs.devenv.packages.x86_64-linux.devenv
+      inputs.devenv.packages.x86_64-linux.devenv
       # wineWowPackages.stable
 
       # libs
       libunwind # for steam in bottles
       gmsh # for freecad
       calculix # for freecad
+      protontricks
+      openfortivpn # vpn for dit
     ];
 
     file = {
@@ -173,6 +178,13 @@
   };
 
   services.syncthing = { enable = true; };
+
+  dconf.settings = {
+    "org/gnome/desktop/peripherals/keyboard" = {
+      numlock-state = true;
+      remember-numlock-state = true;
+    };
+  };
 
   systemd.user = {
     startServices = "sd-switch";
@@ -288,11 +300,13 @@
     # steam.enable = true;
     vscode = {
       enable = true;
+      enableUpdateCheck = false;
       userSettings = {
         "window.openFoldersInNewWindow" = "on";
         "files.autoSave" = "onWindowChange";
         "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
         "git.autofetch" = true;
+        "explorer.confirmDelete" = false;
       };
       extensions = with pkgs.vscode-extensions;
         [

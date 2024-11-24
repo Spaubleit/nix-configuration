@@ -489,7 +489,6 @@ let
         printer = {
           max_velocity = 180;
           max_accel = 800;
-          max_accel_to_decel = 400;
           max_z_velocity = 10;
           max_z_accel = 120;
           square_corner_velocity = 5;
