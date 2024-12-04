@@ -46,7 +46,6 @@
       #media-session.enable = true;
     };
 
-    moonraker.enable = true;
     fluidd.enable = true;
   };
 

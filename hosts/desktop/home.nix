@@ -126,7 +126,7 @@
       megasync
       # minigalaxy
       # obs-studio
-      # bottles
+      bottles
       # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
       jetbrains.webstorm
       # proton-pass

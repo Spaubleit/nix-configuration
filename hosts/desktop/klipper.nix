@@ -541,7 +541,7 @@ let
   };
 in {
   services.moonraker = {
-    enable = true;
+    enable = false;
     user = "root";
     address = "0.0.0.0";
     settings = {

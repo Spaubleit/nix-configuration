@@ -2,7 +2,7 @@
   description = "NixOS configuration";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     devenv.url = "github:cachix/devenv";
     ags.url = "github:Aylur/ags";
     deploy-rs.url = "github:serokell/deploy-rs";
