@@ -1,8 +1,4 @@
 { inputs, config, pkgs, pkgs-stable, ... }: {
-  imports = [
-    # inputs.ags.homeManagerModules.default
-    # inputs.nur.hmModules.nur
-  ];
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -61,13 +57,6 @@
         "HDMI-A-1, 2560x1440, 0x0,    1, transform, 1"
         # ",         preferred, auto,   1"
       ];
-    };
-  };
-
-  dconf.settings = {
-    "org/virt-manager/virt-manager/connections" = {
-      autoconnect = [ "qemu:///system" ];
-      uris = [ "qemu:///system" ];
     };
   };
 
@@ -149,10 +138,6 @@
 
       # gnome
       gnome-tweaks
-      gnomeExtensions.syncthing-indicator
-      gnomeExtensions.tray-icons-reloaded
-      # gnomeExtensions.pop-shell
-      gnomeExtensions.smart-auto-move
 
       inputs.devenv.packages.x86_64-linux.devenv
       # wineWowPackages.stable
@@ -179,10 +164,27 @@
 
   services.syncthing = { enable = true; };
 
-  dconf.settings = {
-    "org/gnome/desktop/peripherals/keyboard" = {
-      numlock-state = true;
-      remember-numlock-state = true;
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/shell" = {
+        disable-user-extensions = false;
+        enabled-extensions = with pkgs.gnomeExtensions; [
+          syncthing-indicator.extensionUuid
+          tray-icons-reloaded.extensionUuid
+          smart-auto-move.extensionUuid
+          background-logo.extensionUuid
+          # pop-shell.extensionUuid
+        ];
+      };
+      "org/gnome/desktop/peripherals/keyboard" = {
+        numlock-state = true;
+        remember-numlock-state = true;
+      };
+      "org/virt-manager/virt-manager/connections" = {
+        autoconnect = [ "qemu:///system" ];
+        uris = [ "qemu:///system" ];
+      };
     };
   };
 
@@ -203,7 +205,7 @@
       enable = true;
       nativeMessagingHosts = [ pkgs.firefoxpwa ];
       profiles = let
-        addons = config.nur.repos.rycee.firefox-addons;
+        addons = inputs.firefox-addons.packages."x86_64-linux";
         default-extensions = with addons; [
           sidebery
           tabliss
@@ -229,16 +231,18 @@
           "devtools.cache.disabled" = true;
         };
         userChrome = ''
-          #main-window #titlebar {
-            overflow: hidden;
-            transition: height 0.3s 0.3s !important;
+          #main-window #TabsToolbar {
+          ··transition: visibility 0s 0s;
+          }
+          #main-window #TabsToolbar .toolbar-items {
+          ··overflow: hidden;
+          ··transition: height 0.3s 0.3s !important;
           }
           /* Default state: Set initial height to enable animation */
-          #main-window #titlebar { height: 3em !important; }
-          #main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
-          #main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
+          #main-window #TabsToolbar .toolbar-items { height: 40px !important; }
           /* Hidden state: Hide native tabs strip */
-          #main-window[titlepreface*="[Sidebery]"] #titlebar { height: 0 !important; }
+          #main-window[titlepreface*="[Sidebery]"] #TabsToolbar { visibility: collapse; transition: visibility 0s 0.6s !important }
+          #main-window[titlepreface*="[Sidebery]"] #TabsToolbar .toolbar-items { height: 0 !important; }
           /* Hidden state: Fix z-index of active pinned tabs */
           #main-window[titlepreface*="[Sidebery]"] #tabbrowser-tabs { z-index: 0 !important; }
         '';

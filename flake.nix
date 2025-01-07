@@ -15,6 +15,10 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     webstorm.url =
       "github:nixos/nixpkgs/6b5019a48f876f3288efc626fa8b70ad0c64eb46";
   };
