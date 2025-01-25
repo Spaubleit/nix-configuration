@@ -120,6 +120,7 @@
       jetbrains.webstorm
       # proton-pass
       vial
+      insomnia
       # vopono
       # stremio
 
@@ -138,6 +139,10 @@
 
       # gnome
       gnome-tweaks
+      gnomeExtensions.syncthing-indicato
+      gnomeExtensions.tray-icons-reloaded
+      gnomeExtensions.smart-auto-move
+      gnomeExtensions.background-logo
 
       inputs.devenv.packages.x86_64-linux.devenv
       # wineWowPackages.stable

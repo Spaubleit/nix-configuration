@@ -26,12 +26,12 @@
   hardware.sane.enable = true;
   hardware.sane.extraBackends = [ pkgs.hplipWithPlugin ];
 
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
 
   security.pam.services.hyprlock = { };
 
   services = {
+    pulseaudio.enable = false;
     flatpak.enable = true;
     pipewire = {
       enable = true;
