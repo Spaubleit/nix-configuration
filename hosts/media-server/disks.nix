@@ -1,12 +1,12 @@
 _ :
 let disks = { 
-  sda = "/dev/sda"; 
+  main = "/dev/sda"; 
 };
 in {
   disko.devices.disk = {
-    sda = {
+    main = {
       type = "disk";
-      device = disks.sda;
+      device = disks.main;
       content = {
         type = "gpt";
         partitions = {
@@ -29,7 +29,6 @@ in {
               type = "btrfs";
               extraArgs = [ "-f" ];
               mountpoint = "/partition-root";
-              # mountOptions = [ "compress=zstd" "noatime" ];
               subvolumes = {
                 "@root" = {
                   mountpoint = "/";

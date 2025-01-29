@@ -58,14 +58,30 @@
           ./hardware/desktop.nix
           ./hosts/desktop/default.nix
         ];
+        home-controller = createSystem [
+          ./modules/common.nix
+          ./hardware/intel-nuc.nix
+          ./hosts/home-controller/default.nix
+        ];
       };
-      deploy.nodes.media-server = {
-        hostname = "media-server.local";
-        sshUser = "root";
-        profiles.system = {
-          user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos
-            self.nixosConfigurations.media-server;
+      deploy.nodes = {
+        media-server = {
+          hostname = "media-server.local";
+          sshUser = "root";
+          profiles.system = {
+            user = "root";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos
+              self.nixosConfigurations.media-server;
+          };
+        };
+        home-controller = {
+          hostname = "home-controller.local";
+          sshUser = "root";
+          profiles.system = {
+            user = "root";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos
+              self.nixosConfigurations.home-controller;
+          };
         };
       };
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;

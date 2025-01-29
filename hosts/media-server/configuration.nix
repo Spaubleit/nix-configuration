@@ -8,7 +8,6 @@
 
   environment.systemPackages = with pkgs; [ curl git ];
   services = {
-    pulseaudio.enable = false;
     openssh.enable = true;
     pipewire = {
       enable = true;

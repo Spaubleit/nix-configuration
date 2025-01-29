@@ -139,7 +139,7 @@
 
       # gnome
       gnome-tweaks
-      gnomeExtensions.syncthing-indicato
+      gnomeExtensions.syncthing-indicator
       gnomeExtensions.tray-icons-reloaded
       gnomeExtensions.smart-auto-move
       gnomeExtensions.background-logo
