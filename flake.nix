@@ -50,6 +50,7 @@
       nixosConfigurations = {
         media-server = createSystem [
           ./modules/common.nix
+          ./modules/virtualization.nix
           ./hardware/dell-laptop.nix
           ./hosts/media-server/default.nix
         ];

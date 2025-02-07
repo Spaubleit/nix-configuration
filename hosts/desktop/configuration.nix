@@ -51,12 +51,32 @@
 
   services.udev.packages = with pkgs; [ vial ];
 
+  # start of unknown territory
+  environment.systemPackages = with pkgs; [
+    virt-manager
+    virt-viewer
+    spice 
+    spice-gtk
+    spice-protocol
+    win-virtio
+    win-spice
+  ];
+  
   virtualisation = {
-    libvirtd.enable = true;
-    virtualbox = {
-      host.enable = true;
-      host.enableExtensionPack = true;
+    libvirtd = {
+      enable = true;
+      qemu = {
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
     };
+    spiceUSBRedirection.enable = true;
+  };
+  services.spice-vdagentd.enable = true;
+  # end of unknown territory
+
+  virtualisation = {
     containers.registries.search = [ "docker.io" ];
     docker = { enable = true; };
     podman = {
@@ -67,27 +87,13 @@
     };
   };
 
-  # enable flakes
-  nix = {
-    package = pkgs.nixVersions.stable;
-    settings = {
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "monthly";
-      options = "--delete-older-than 1m";
-    };
-  };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users = {
-    extraGroups.vboxusers.members = [ "spaubleit" ];
     users.spaubleit = {
       isNormalUser = true;
       description = "spaubleit";
       extraGroups =
-        [ "networkmanager" "wheel" "podman" "docker" "scanner" "lp" ];
+        [ "networkmanager" "wheel" "podman" "docker" "scanner" "lp" "libvirtd" ];
       subUidRanges = [{
         count = 165536;
         startUid = 10000;
@@ -98,15 +104,6 @@
       }];
     };
   };
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs;
-    [
-      #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-      #  wget
-      virt-manager
-    ];
 
   programs = {
     steam = {

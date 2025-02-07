@@ -96,7 +96,6 @@
       google-chrome
       # tor-browser
       # yandex-browser download failure
-      # jetbrains-toolbox download failure
       obsidian
       libreoffice
       spotify
@@ -108,7 +107,7 @@
       blender
       # psst
       # lutris
-      # gnome.gnome-boxes
+      gnome-boxes
       dbeaver-bin
       kitty
       authenticator
@@ -116,13 +115,12 @@
       # minigalaxy
       # obs-studio
       bottles
-      # (bottles-unwrapped.override { extraLibraries = pkgs: [pkgs.libunwind ]; })
       jetbrains.webstorm
+      jetbrains-toolbox
       # proton-pass
       vial
       insomnia
       # vopono
-      # stremio
 
       # Messengers
       tdesktop
@@ -185,10 +183,6 @@
       "org/gnome/desktop/peripherals/keyboard" = {
         numlock-state = true;
         remember-numlock-state = true;
-      };
-      "org/virt-manager/virt-manager/connections" = {
-        autoconnect = [ "qemu:///system" ];
-        uris = [ "qemu:///system" ];
       };
     };
   };
