@@ -1,10 +1,10 @@
 { pkgs, ... }: {
   boot.loader.systemd-boot.enable = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix = {
     package = pkgs.nixVersions.stable;
     settings = {
       auto-optimise-store = true;
+      experimental-features = [ "nix-command" "flakes" ];
     };
     gc = {
       automatic = true;

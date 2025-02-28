@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, pkgs-stable, ... }: {
+{ inputs, pkgs, pkgs-stable, ... }: {
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -89,7 +89,7 @@
       # wireplumber
       firefoxpwa
       deploy-rs
-      # nixos-anywhere
+      nixos-anywhere
       p7zip
 
       # Apps
@@ -104,7 +104,7 @@
       freecad
       prusa-slicer
       mpv
-      blender
+      # blender
       # psst
       # lutris
       gnome-boxes
@@ -115,8 +115,8 @@
       # minigalaxy
       # obs-studio
       bottles
-      jetbrains.webstorm
-      jetbrains-toolbox
+      # jetbrains.webstorm
+      # jetbrains-toolbox
       # proton-pass
       vial
       insomnia
@@ -250,12 +250,12 @@
           inherit settings search userChrome;
           id = 0;
           isDefault = true;
-          extensions = (with addons; [ adnauseam proton-pass ]) ++ default-extensions ++ react-extensions;
+          extensions.packages = (with addons; [ adnauseam proton-pass ]) ++ default-extensions ++ react-extensions;
         };
         kr = {
           inherit settings search userChrome;
           id = 1;
-          extensions = default-extensions ++ react-extensions;
+          extensions.packages = default-extensions ++ react-extensions;
         };
       };
     };
@@ -303,19 +303,21 @@
     # steam.enable = true;
     vscode = {
       enable = true;
-      enableUpdateCheck = false;
-      userSettings = {
-        "window.openFoldersInNewWindow" = "on";
-        "files.autoSave" = "onWindowChange";
-        "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
-        "git.autofetch" = true;
-        "explorer.confirmDelete" = false;
+      profiles.default = {
+        enableUpdateCheck = false;
+        userSettings = {
+          "window.openFoldersInNewWindow" = "on";
+          "files.autoSave" = "onWindowChange";
+          "workbench.colorTheme" = "Webstorm IntelliJ Darcula Theme";
+          "git.autofetch" = true;
+          "explorer.confirmDelete" = false;
+        };
+        extensions = with pkgs.vscode-extensions;
+          [
+            bbenoist.nix
+            # xr0master.webstorm-intellij-darcula-theme
+          ];
       };
-      extensions = with pkgs.vscode-extensions;
-        [
-          bbenoist.nix
-          # xr0master.webstorm-intellij-darcula-theme
-        ];
     };
   };
 }

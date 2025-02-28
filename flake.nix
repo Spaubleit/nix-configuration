@@ -43,14 +43,13 @@
         config.allowUnfree = true;
       };
       createSystem = modules: inputs.nixpkgs.lib.nixosSystem {
-        inherit system modules;
-        specialArgs = { inherit inputs pkgs pkgs-stable pkgs-webstorm; };
+        inherit pkgs system modules;
+        specialArgs = { inherit inputs pkgs-stable pkgs-webstorm; };
       };
     in {
       nixosConfigurations = {
         media-server = createSystem [
           ./modules/common.nix
-          ./modules/virtualization.nix
           ./hardware/dell-laptop.nix
           ./hosts/media-server/default.nix
         ];

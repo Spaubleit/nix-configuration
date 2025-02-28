@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: {
+{ pkgs, ... }: {
   networking = {
     hostName = "media-server";
     networkmanager.enable = true;
@@ -38,7 +38,7 @@
       extraGroups = [ "wheel" ];
       hashedPassword =
         "$y$j9T$z.JT2f3VWNsXMHupujeRI/$UBK0na3NcstexOdQfRrXqt6uQlfXujsF1E3uGgDic46";
-      packages = with pkgs; [ stremio firefox jellyfin-media-player ];
+      packages = with pkgs; [ stremio firefox jellyfin-media-player mpv transmission_4 ];
     };
     root.openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJjzIxkq7kdjaTfHXwwNmKvdm7k+OvJa/gVyNrvtqD1P main desktop"
