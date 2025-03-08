@@ -121,6 +121,7 @@
       vial
       insomnia
       # vopono
+      dconf-editor
 
       # Messengers
       tdesktop
@@ -151,6 +152,7 @@
       calculix # for freecad
       protontricks
       openfortivpn # vpn for dit
+      adw-gtk3 # gtk3 theme
     ];
 
     file = {
@@ -180,9 +182,9 @@
           # pop-shell.extensionUuid
         ];
       };
-      "org/gnome/desktop/peripherals/keyboard" = {
-        numlock-state = true;
-        remember-numlock-state = true;
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+        gtk-theme = "adw-gtk3-dark";
       };
     };
   };

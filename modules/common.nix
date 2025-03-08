@@ -30,6 +30,17 @@
     layout = "us";
     variant = "dvp";
   };
+
+  programs.dconf.profiles = {
+    gdm.databases = [{
+      settings = {
+        "org/gnome/desktop/peripherals/keyboard" = {
+          numlock-state = true;
+          remember-numlock-state = true;
+        };
+      };
+    }];
+  };
   
   # locale
   time.timeZone = "Europe/Minsk";
