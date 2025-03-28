@@ -217,7 +217,7 @@
         ];
         search = {
           force = true;
-          default = "DuckDuckGo";
+          default = "ddg";
         };
         settings = {
           "browser.tabs.loadInBackground" = false; # Switch to opened tab
